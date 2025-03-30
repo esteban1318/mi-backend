@@ -2,7 +2,7 @@
   "name": "mi-app-node",
   "version": "1.0.0",
   "description": "Aplicación Node.js con MySQL",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "node index.js",
     "debug": "ls -R /app && echo '-----' && pwd && node -v && npm -v"
