@@ -4,8 +4,8 @@
   "description": "Aplicación Node.js con MySQL",
   "main": "index.js",
   "scripts": {
-  "debug": "ls -R /app && echo '-----' && pwd"
-   }
+    "start": "node index.js",
+    "debug": "ls -R /app && echo '-----' && pwd && node -v && npm -v"
   },
   "dependencies": {
     "cors": "^2.8.5",
