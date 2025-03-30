@@ -1,18 +1,13 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',   // Cambia esto si usas otro usuario
-    password: '1318',   // Cambia esto si tienes contraseña
-    database: 'conjunto_residencial'
+const pool = mysql.createPool({
+  host: process.env.MYSQL_HOST || 'ballast.proxy.rlwy.net', // Host de Railway
+  user: process.env.MYSQL_USER || 'root',     // Usuario correcto
+  password: process.env.MYSQL_PASSWORD || 'bkgjXZqXcmXDdUuEPIylionwtbNfBglv', // Contraseña de Railway
+  database: process.env.MYSQL_DATABASE || 'conjunto_residencial', // Asegura que sea esta BD
+  port: process.env.MYSQL_PORT || 3306,       // Puerto de Railway
+  waitForConnections: true,
+  connectionLimit: 10,
 });
 
-connection.connect(err => {
-    if (err) {
-        console.error('Error de conexión:', err);
-        return;
-    }
-    console.log('Conectado a la base de datos');
-});
-
-module.exports = connection;
+module.exports = pool;
