@@ -11,9 +11,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../../frontend')));
 
 // Rutas de la API
-app.get('/api/medidores', async (req, res) => {
+app.get(['/medidores', '/api/medidores'], async (req, res) => {
   try {
-    const [results] = await pool.query('SELECT * FROM medidores'); // Correcto para mysql2/promise
+    const [results] = await pool.query('SELECT * FROM medidores');
     res.json(results);
   } catch (err) {
     console.error('❌ Error en la base de datos:', err);
