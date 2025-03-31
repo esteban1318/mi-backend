@@ -8,9 +8,7 @@ const pool = mysql.createPool({
   port: process.env.MYSQL_PORT || 55687,
   waitForConnections: true,
   connectionLimit: 10,
-  authPlugins: { 
-    caching_sha2_password: () => require('mysql2/lib/auth_plugins').caching_sha2_password
-  }
+  ssl: { rejectUnauthorized: false }, // Agregar si Railway requiere SSL
 });
 
 module.exports = pool;
