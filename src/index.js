@@ -34,6 +34,16 @@ app.use(express.static(path.join(__dirname, '../../frontend')));
 app.get('/ping', (req, res) => {
   res.json({ status: 'ok' });
 });
+app.get('/api/medidores', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM medidores');
+    res.json(rows);
+  } catch (error) {
+    console.error('❌ Error MySQL:', error);
+    res.status(500).json({ error: 'Error al obtener los medidores' });
+  }
+});
+
 
 
 app.post('/api/medidores', async (req, res) => {
@@ -61,10 +71,11 @@ pool.getConnection()
 
 
 // Iniciar el servidor en el puerto asignado por Railway o 3000 en local
-const PORT = process.env.PORT || 8080; 
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Servidor corriendo en http://0.0.0.0:${PORT}`);
 });
+
 
 
 
