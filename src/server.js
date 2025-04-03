@@ -1,3 +1,7 @@
+const express = require('express');
+const app = express();
+app.use(express.json()); // ⬅ NECESARIO para procesar JSON en POST requests
+
 // Ruta para obtener todos los medidores
 app.get('/medidores', async (req, res) => {
     try {
@@ -28,7 +32,7 @@ app.post('/medidores', async (req, res) => {
     } catch (error) {
         console.error('Error MySQL:', error);
         res.status(500).json({ 
-            error: 'Error al insertar el medidor',
+            error: 'Error al insertar el medidor'+error.message,
             detalle: error.message
         });
     }
