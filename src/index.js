@@ -1,4 +1,6 @@
-require('dotenv').config(); // Carga las variables de entorno
+require('dotenv').config();
+console.log('MYSQL_HOST:', process.env.MYSQL_HOST);
+ // Carga las variables de entorno
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
