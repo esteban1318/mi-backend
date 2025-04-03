@@ -1,34 +1,31 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const pool = require('./db'); // Usar pool en lugar de connection
+const pool = require('./db'); // Asegúrate de que db.js esté configurado
 
 const app = express();
 
-// 🔹 Configurar CORS para permitir solicitudes desde tu frontend
+// Configurar CORS para permitir solicitudes desde tu frontend
 const corsOptions = {
-  origin: 'https://orientallock.netlify.app', // Reemplaza con la URL de tu frontend
+  origin: 'https://orientallock.netlify.app', // Permite solo tu dominio frontend
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization'
 };
-
 app.use(cors(corsOptions));
+
 app.use(express.json());
 
-// Puerto asignado por Railway o 3000 en local
-const PORT = process.env.PORT || 3000;
-
-// 🔹 Configurar Express para servir archivos estáticos desde "frontend"
+// Servir archivos estáticos (si es necesario)
 app.use(express.static(path.join(__dirname, '../../frontend')));
 
-// Middleware para logs (opcional, ayuda a depurar)
+// Middleware de logging (opcional)
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
 });
 
 // Rutas de la API
-app.get(['/medidores', '/api/medidores'], async (req, res) => {
+app.get('/api/medidores', async (req, res) => {
   try {
     const [results] = await pool.query('SELECT * FROM medidores');
     res.json(results);
@@ -38,7 +35,7 @@ app.get(['/medidores', '/api/medidores'], async (req, res) => {
   }
 });
 
-app.post(['/medidores', '/api/medidores'], async (req, res) => {
+app.post('/api/medidores', async (req, res) => {
   const { torre, apartamento, medidor, estado } = req.body;
 
   if (!torre || !apartamento || !medidor || !estado) {
@@ -48,7 +45,6 @@ app.post(['/medidores', '/api/medidores'], async (req, res) => {
   try {
     const sql = 'INSERT INTO medidores (torre, apartamento, medidor, estado) VALUES (?, ?, ?, ?)';
     const [result] = await pool.query(sql, [torre, apartamento, medidor, estado]);
-
     res.status(201).json({ message: 'Medidor agregado correctamente', id: result.insertId });
   } catch (error) {
     console.error('❌ Error MySQL:', error);
@@ -56,7 +52,8 @@ app.post(['/medidores', '/api/medidores'], async (req, res) => {
   }
 });
 
-// Iniciar servidor en el puerto correcto
+// Iniciar el servidor en el puerto asignado
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`✅ Servidor corriendo en el puerto ${PORT}`);
+  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
 });
