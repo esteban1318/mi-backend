@@ -5,9 +5,17 @@ const pool = require('./db'); // Asegúrate de que db.js esté configurado
 
 const app = express();
 
-// Configurar CORS para permitir solicitudes desde tu frontend
+// Forzar encabezados CORS manualmente (refuerzo)
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://orientallock.netlify.app');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  next();
+});
+
+// Configuración de CORS (opcional, pero recomendada)
 const corsOptions = {
-  origin: 'https://orientallock.netlify.app', // Permite solo tu dominio frontend
+  origin: 'https://orientallock.netlify.app',
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization'
 };
@@ -18,30 +26,17 @@ app.use(express.json());
 // Servir archivos estáticos (si es necesario)
 app.use(express.static(path.join(__dirname, '../../frontend')));
 
-// Middleware de logging (opcional)
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  next();
+// Rutas de la API
+app.get('/ping', (req, res) => {
+  res.json({ status: 'ok' });
 });
 
-// Rutas de la API
-app.get('/api/medidores', async (req, res) => {
-  try {
-    const [results] = await pool.query('SELECT * FROM medidores');
-    res.json(results);
-  } catch (err) {
-    console.error('❌ Error en la base de datos:', err);
-    res.status(500).json({ error: 'Error en la base de datos', detalle: err.message });
-  }
-});
 
 app.post('/api/medidores', async (req, res) => {
   const { torre, apartamento, medidor, estado } = req.body;
-
   if (!torre || !apartamento || !medidor || !estado) {
     return res.status(400).json({ error: 'Todos los campos son obligatorios' });
   }
-
   try {
     const sql = 'INSERT INTO medidores (torre, apartamento, medidor, estado) VALUES (?, ?, ?, ?)';
     const [result] = await pool.query(sql, [torre, apartamento, medidor, estado]);
@@ -52,8 +47,8 @@ app.post('/api/medidores', async (req, res) => {
   }
 });
 
-// Iniciar el servidor en el puerto asignado
-const PORT = process.env.PORT || 3000;
+// Iniciar el servidor en el puerto asignado por Railway o 3000 en local
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
 });
