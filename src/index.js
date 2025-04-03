@@ -4,7 +4,15 @@ const path = require('path');
 const pool = require('./db'); // Usar pool en lugar de connection
 
 const app = express();
-app.use(cors());
+
+// 🔹 Configurar CORS para permitir solicitudes desde tu frontend
+const corsOptions = {
+  origin: 'https://orientallock.netlify.app', // Reemplaza con la URL de tu frontend
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization'
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Puerto asignado por Railway o 3000 en local
