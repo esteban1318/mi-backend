@@ -62,8 +62,9 @@ pool.getConnection()
 
 // Iniciar el servidor en el puerto asignado por Railway o 3000 en local
 const PORT = process.env.PORT || 8080; 
-app.listen(PORT, () => {
-  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Servidor corriendo en http://0.0.0.0:${PORT}`);
 });
+
 
 
