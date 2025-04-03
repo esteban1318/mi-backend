@@ -48,7 +48,9 @@ app.post('/api/medidores', async (req, res) => {
 });
 
 // Iniciar el servidor en el puerto asignado por Railway o 3000 en local
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;  // NO pongas un puerto fijo
+
 app.listen(PORT, () => {
   console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
 });
+
