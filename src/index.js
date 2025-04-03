@@ -46,11 +46,20 @@ app.post('/api/medidores', async (req, res) => {
     res.status(500).json({ error: 'Error al insertar el medidor', detalle: error.message });
   }
 });
+pool.getConnection()
+  .then(connection => {
+    console.log("✅ Conexión a MySQL exitosa");
+    connection.release();
+  })
+  .catch(err => {
+    console.error("❌ Error conectando a MySQL:", err);
+  });
+
 
 // Iniciar el servidor en el puerto asignado por Railway o 3000 en local
-const PORT = process.env.PORT || 3000;  // NO pongas un puerto fijo
-
+const PORT = process.env.PORT || 8080; 
 app.listen(PORT, () => {
   console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
 });
+
 
