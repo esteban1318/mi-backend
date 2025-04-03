@@ -20,8 +20,28 @@ app.get(['/medidores', '/api/medidores'], async (req, res) => {
     res.status(500).send('Error en la base de datos');
   }
 });
+app.post(['/medidores', '/api/medidores'], async (req, res) => {
+  const { torre, apartamento, medidor, estado } = req.body;
+
+  if (!torre || !apartamento || !medidor || !estado) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+  }
+
+  try {
+    const sql = 'INSERT INTO medidores (torre, apartamento, medidor, estado) VALUES (?, ?, ?, ?)';
+    const [result] = await pool.query(sql, [torre, apartamento, medidor, estado]);
+
+    res.status(201).json({ message: 'Medidor agregado correctamente', id: result.insertId });
+  } catch (error) {
+    console.error('❌ Error MySQL:', error);
+    res.status(500).json({ error: 'Error al insertar el medidor', detalle: error.message });
+  }
+});
+
 
 // Iniciar servidor
-app.listen(3000, () => {
-  console.log('✅ Servidor corriendo en http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
 });
+

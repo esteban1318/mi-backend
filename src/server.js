@@ -1,9 +1,11 @@
 const express = require('express');
-const app = express();
+const pool = require('./db'); // Importa la conexión a la DB
+const app = express();  // ⬅ ¡Aquí defines `app`!
 app.use(express.json()); // ⬅ NECESARIO para procesar JSON en POST requests
 
+
 // Ruta para obtener todos los medidores
-app.get('/medidores', async (req, res) => {
+app.get('/api/medidores', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM medidores');
         res.json(rows);
@@ -17,7 +19,7 @@ app.get('/medidores', async (req, res) => {
 });
 
 // 🔽 NUEVA RUTA PARA INSERTAR UN MEDIDOR
-app.post('/medidores', async (req, res) => {
+app.post('/api/medidores', async (req, res) => {
     const { torre, apartamento, medidor, estado } = req.body;
 
     if (!torre || !apartamento || !medidor || !estado) {
