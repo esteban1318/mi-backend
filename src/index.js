@@ -1,7 +1,9 @@
+require('dotenv').config(); // Carga las variables de entorno
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const pool = require('./db'); // Asegúrate de que db.js esté configurado
+const pool = require('./db');
+ // Asegúrate de que db.js esté configurado
 
 const app = express();
 
