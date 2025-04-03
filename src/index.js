@@ -4,7 +4,7 @@ const path = require('path');
 const pool = require('./db'); // Usar pool en lugar de connection
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 // 🔹 Configurar Express para servir archivos estáticos desde "frontend"
