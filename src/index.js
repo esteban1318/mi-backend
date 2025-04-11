@@ -75,6 +75,33 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Servidor corriendo en http://0.0.0.0:${PORT}`);
 });
+app.post('/api/login', async (req, res) => {
+  const { usuario, contraseña, rol } = req.body;
+
+  if (!usuario || !contraseña || !rol) {
+    return res.status(400).json({ success: false, message: 'Usuario, contraseña y rol son obligatorios' });
+  }
+
+  try {
+    const sql = 'SELECT * FROM usuarios WHERE usuario = ? AND contraseña = ? AND rol = ?';
+    const [rows] = await pool.query(sql, [usuario, contraseña, rol]); 
+
+    if (rows.length > 0) {
+      const user = rows[0];
+      res.json({
+        success: true,
+        message: 'Login exitoso',
+        usuario: user.usuario,
+        rol: user.rol
+      });
+    } else {
+      res.status(401).json({ success: false, message: 'Credenciales o rol incorrecto' });
+    }
+  } catch (error) {
+    console.error('❌ Error en login:', error);
+    res.status(500).json({ success: false, message: 'Error en el servidor', detalle: error.message });
+  }
+});
 
 
 
