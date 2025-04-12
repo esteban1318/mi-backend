@@ -102,6 +102,15 @@ app.post('/api/login', async (req, res) => {
     res.status(500).json({ success: false, message: 'Error en el servidor', detalle: error.message });
   }
 });
+app.get('/api/residentes', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM residentes');
+    res.json(rows);
+  } catch (error) {
+    console.error('❌ Error al obtener residentes:', error);
+    res.status(500).json({ error: 'Error al obtener los residentes' });
+  }
+});
 
 
 
